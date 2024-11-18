@@ -35,20 +35,20 @@ jobs:
           push: true
           tags: saugat0082/catalogservice:latest
 
-  # Step 2: Deploy Services Using Docker Compose
-  deploy:
-    runs-on: ubuntu-latest
-    needs: docker  # Only run after the docker job
+  # # Step 2: Deploy Services Using Docker Compose
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: docker  # Only run after the docker job
 
-    steps:
-      # Deploy to remote server using SSH
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.DEPLOY_SERVER_IP }}
-          username: ${{ secrets.DEPLOY_SERVER_USER }}
-          password: ${{ secrets.DEPLOY_SERVER_PASSWORD }} # Use SSH key instead of password for better security
-          script: |
-            cd /path/to/your/docker-compose-folder
-            docker-compose pull
-            docker-compose up -d --build --remove-orphans
+  #   steps:
+  #     # Deploy to remote server using SSH
+  #     - name: Deploy to Server
+  #       uses: appleboy/ssh-action@v0.1.8
+  #       with:
+  #         host: ${{ secrets.DEPLOY_SERVER_IP }}
+  #         username: ${{ secrets.DEPLOY_SERVER_USER }}
+  #         password: ${{ secrets.DEPLOY_SERVER_PASSWORD }} # Use SSH key instead of password for better security
+  #         script: |
+  #           cd /path/to/your/docker-compose-folder
+  #           docker-compose pull
+  #           docker-compose up -d --build --remove-orphans
