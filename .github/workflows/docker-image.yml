@@ -1,9 +1,12 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches:
-      - master  # Trigger workflow on pushes to 'master' branch
+  workflow_dispatch:  # Manual trigger for the workflow
+    inputs:
+      tag:  # Input parameter for version or tag
+        description: 'Provide the Docker tag (e.g., 1.0.0)'  # Text displayed in the UI
+        required: true  # This input is mandatory
+        default: 'latest'
 
 jobs:
   docker:
@@ -44,4 +47,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: saugat0082/catalogservice:0.0.3
+          tags: |
+            saugat0082/catalogservice:${{ github.event.inputs.tag }}
+            saugat0082/catalogservice:latest
