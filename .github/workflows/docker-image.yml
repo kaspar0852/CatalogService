@@ -49,3 +49,21 @@ jobs:
           push: true
           tags: |
             saugat0082/catalogservice:${{ github.event.inputs.tag }}
+
+     # # Deploy to Server
+     #  - name: Deploy to Server
+     #    uses: appleboy/ssh-action@v0.1.8
+     #    with:
+     #      host: ${{ secrets.SERVER_IP }}
+     #      username: ${{ secrets.SERVER_USER }}
+     #      key: ${{ secrets.SERVER_SSH_KEY }}
+     #      script: |
+     #        # Pull the latest Docker image
+     #        docker pull saugat0082/catalogservice:${{ github.event.inputs.tag }}
+
+     #        # Stop the currently running container
+     #        docker stop catalogservice || true
+     #        docker rm catalogservice || true
+
+     #        # Start a new container with the updated image
+     #        docker run -d --name catalogservice -p 80:80 saugat0082/catalogservice:${{ github.event.inputs.tag }}
