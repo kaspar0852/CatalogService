@@ -28,6 +28,7 @@ jobs:
           export DOCKER_PASSWORD=$(echo '${{ secrets.catalogsecrets }}' | jq -r '.DOCKER_PASSWORD')
           export GOOGLE_CHAT_WEBHOOK_URL=$(echo '${{ secrets.catalogsecrets }}' | jq -r '.GOOGLE_CHAT_WEBHOOK_URL')
 
+          
           echo "DOCKER_USERNAME=$DOCKER_USERNAME" >> $GITHUB_ENV
           echo "DOCKER_PASSWORD=$DOCKER_PASSWORD" >> $GITHUB_ENV
           echo "GOOGLE_CHAT_WEBHOOK_URL=$GOOGLE_CHAT_WEBHOOK_URL" >> $GITHUB_ENV
@@ -55,35 +56,44 @@ jobs:
 
       # Notify Google Chat (Success)
       - name: Notify Google Chat (Success)
-        if: success()  # Run only if the build succeeds
         run: |
           curl -X POST -H "Content-Type: application/json" \
-            -d "{\"text\": \"✅ *Build Successful*: Docker image has been built and pushed successfully!\\nTag: \`${{ github.event.inputs.tag }}\`\"}" \
+            -d '{
+              "text": "✅ *Build Successful*: Docker image has been built and pushed successfully!\nTag: `${{ github.event.inputs.tag }}`"
+                }' \
             ${{ env.GOOGLE_CHAT_WEBHOOK_URL }}
+
 
       # Notify Google Chat (Failure)
       - name: Notify Google Chat (Failure)
         if: failure()  # Run only if the build fails
         run: |
           curl -X POST -H "Content-Type: application/json" \
-            -d "{\"text\": \"❌ *Build Failed*: There was an error building or pushing the Docker image.\\nPlease check the logs for details.\"}" \
+            -d '{
+                "text": "❌ *Build Failed*: There was an error building or pushing the Docker image.\nPlease check the logs for details."
+                }' \
             ${{ env.GOOGLE_CHAT_WEBHOOK_URL }}
 
-      # # Deploy to Server
-      # - name: Deploy to Server
-      #   if: success()  # Deploy only if the build succeeds
-      #   uses: appleboy/ssh-action@v0.1.8
-      #   with:
-      #     host: ${{ secrets.SERVER_IP }}
-      #     username: ${{ secrets.SERVER_USER }}
-      #     key: ${{ secrets.SERVER_SSH_KEY }}
-      #     script: |
-      #       # Pull the latest Docker image
-      #       docker pull saugat0082/catalogservice:${{ github.event.inputs.tag }}
 
-      #       # Stop the currently running container
-      #       docker stop catalogservice || true
-      #       docker rm catalogservice || true
+      # - name: Health Check
+      #   run: |
+      #      curl -f http://your-server-ip/health || exit 1
 
-      #       # Start a new container with the updated image
-      #       docker run -d --name catalogservice -p 80:80 saugat0082/catalogservice:${{ github.event.inputs.tag }}
+     # # Deploy to Server
+     #  - name: Deploy to Server
+     #    uses: appleboy/ssh-action@v0.1.8
+     #    with:
+     #      host: ${{ secrets.SERVER_IP }}
+     #      username: ${{ secrets.SERVER_USER }}
+     #      key: ${{ secrets.SERVER_SSH_KEY }}
+     #      script: |
+     #        # Pull the latest Docker image
+     #        docker pull saugat0082/catalogservice:${{ github.event.inputs.tag }}
+
+     #        # Stop the currently running container
+     #        docker stop catalogservice || true
+     #        docker rm catalogservice || true
+
+     #        # Start a new container with the updated image
+     #        docker run -d --name catalogservice -p 80:80 saugat0082/catalogservice:${{ github.event.inputs.tag }}
+
