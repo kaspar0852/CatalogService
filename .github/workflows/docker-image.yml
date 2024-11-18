@@ -59,20 +59,20 @@ jobs:
         if: success()  # Run only if the build succeeds
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d '{
+            -d '{
                 "text": "✅ *Build Successful*: Docker image has been built and pushed successfully!\nTag: `${{ github.event.inputs.tag }}`"
-              }' \
-          ${{ env.GOOGLE_CHAT_WEBHOOK_URL }}
+                }' \
+            ${{ env.GOOGLE_CHAT_WEBHOOK_URL }}
 
       # Notify Google Chat (Failure)
       - name: Notify Google Chat (Failure)
         if: failure()  # Run only if the build fails
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d '{
+            -d '{
                 "text": "❌ *Build Failed*: There was an error building or pushing the Docker image.\nPlease check the logs for details."
-              }' \
-          ${{ env.GOOGLE_CHAT_WEBHOOK_URL }}
+                }' \
+            ${{ env.GOOGLE_CHAT_WEBHOOK_URL }}
 
 
       # - name: Health Check
