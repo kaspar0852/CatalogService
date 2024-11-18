@@ -55,14 +55,11 @@ jobs:
             saugat0082/catalogservice:${{ github.event.inputs.tag }}
 
       # Notify Google Chat (Success)
-      - name: Notify Google Chat (Success)
-        if: success()  # Run only if the build succeeds
+      - name: Notify Google Chat
         run: |
-          curl -X POST -H "Content-Type: application/json" \
-            -d '{
-                "text": "✅ *Build Successful*: Docker image has been built and pushed successfully!\nTag: `${{ github.event.inputs.tag }}`"
-                }' \
-            ${{ env.GOOGLE_CHAT_WEBHOOK_URL }}
+              curl -X POST -H "Content-Type: application/json" \
+              -d "{\"text\": \"✅ *Build Successful*: Docker image has been built and pushed successfully! Tag: \\\`${{ github.event.inputs.tag }}\\\`\"}" \
+              ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
 
       # Notify Google Chat (Failure)
       - name: Notify Google Chat (Failure)
