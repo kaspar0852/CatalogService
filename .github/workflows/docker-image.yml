@@ -43,5 +43,5 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          push: false
+          push: true
           tags: saugat0082/catalogservice:0.0.3
