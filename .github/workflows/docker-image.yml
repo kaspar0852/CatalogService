@@ -58,7 +58,7 @@ jobs:
       - name: Notify Google Chat (Success)
         if: success()
         run: |
-            curl -X POST -H "Content-Type: application/json" \
+            curl -v -X POST -H "Content-Type: application/json" \
               -d '{
                 "text": "✅ *Build Successful*: Docker image has been built and pushed successfully!\nTag: `${{ github.event.inputs.tag }}`"
                   }' \
