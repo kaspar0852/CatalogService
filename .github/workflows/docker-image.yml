@@ -61,7 +61,7 @@ jobs:
             -d '{
               "text": "✅ *Build Successful*: Docker image has been built and pushed successfully!\nTag: `${{ github.event.inputs.tag }}`"
                 }' \
-            ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+            ${{ env.GOOGLE_CHAT_WEBHOOK_URL }}
 
 
       # Notify Google Chat (Failure)
