@@ -1,0 +1,90 @@
+# Ignore build output and logs
+bin/
+obj/
+*.log
+*.cache
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore Rider IDE-specific files and folders
+.idea/
+.idea_modules/
+*.iml
+*.ipr
+*.iws
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files
+~$*
+*.tmp
+
+# Ignore build artifacts
+*.dll
+*.exe
+*.app
+*.so
+*.dylib
+*.pdb
+
+# Ignore package directories
+**/packages/
+**/node_modules/
+
+# Ignore NuGet
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Ignore files created by Rider and JetBrains
+.idea/
+*.sln.ide
+.idea_modules/
+out/
+*.ipr
+*.iws
+
+# Ignore compiled stylesheets
+*.css.map
+
+# Ignore database files
+*.mdf
+*.ldf
+
+# Ignore Visual Studio Code workspace settings
+.vscode/
+.vscode/settings.json
+
+# Ignore temporary files and directories
+~$*
+
+# Ignore application secrets
+secrets.json
+
+# Ignore published output
+.publish/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Build directories
+bin/
+obj/
+
+# Rider and IDE settings
+.idea/
+
+# Docker-related files
+docker-data/
+volumes/
+
+# Ignore the .containers directory
+.containers/

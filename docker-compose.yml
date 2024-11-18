@@ -1,0 +1,83 @@
+services:
+  catalogservice:
+    image: catalogservice
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "80"
+    volumes:
+      - ./appsettings.json:/app/appsettings.json
+#      - ./app:/app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+#      - DOTNET_USE_POLLING_FILE_WATCHER=1
+#    command: dotnet watch run
+        
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - catalogservice
+    ports:
+      - "8080:80" # Expose NGINX on port 8080
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - catalogservice
+    
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=false          # Disable anonymous access
+      - GF_SECURITY_ADMIN_USER=admin            # Admin username
+      - GF_SECURITY_ADMIN_PASSWORD=admin123     # Admin password
+      - GF_SERVER_ROOT_URL=http://localhost:3000 # Set root URL
+      - GF_LIVE_FEATURE_TOGGLE=false
+      - GF_LOG_LEVEL=debug
+        
+        
+        #    depends_on:
+        #      - migrations
+        #  
+        #  catalog.db:
+        #    image: postgres:latest
+        #    container_name: catalog.database
+        #    environment:
+        #      - POSTGRES_USER=postgres
+        #      - POSTGRES_PASSWORD=postgres
+        #      - POSTGRES_DB=catalogdb
+        #    volumes:
+        #      - ./.containers/catalog-db:/var/lib/postgresql/data
+        #    ports:
+        #      - 5433:5432
+
+        #  migrations:
+        #    build:
+        #      context: .
+        #      dockerfile: Dockerfile
+        #      target: build-env
+        #    entrypoint: [ "dotnet", "ef", "database", "update" ]
+        #    volumes:
+        #      - ./appsettings.json:/app/appsettings.json
+        #    environment:
+        #      - ASPNETCORE_ENVIRONMENT=Development
+
+        
+
+        
+    
