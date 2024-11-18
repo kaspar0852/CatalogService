@@ -40,6 +40,12 @@ jobs:
       - name: Verify Docker Login
         run: docker login -u "${{ env.DOCKER_USERNAME }}" -p "${{ env.DOCKER_PASSWORD }}"
 
+     #Security Check
+      - name: Scan Docker Image for Vulnerabilities
+        uses: aquasecurity/trivy-action@v0.2.1
+        with:
+          image-ref: saugat0082/catalogservice:${{ github.event.inputs.tag }}
+
       # Build and push the Docker image
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v4
@@ -49,6 +55,31 @@ jobs:
           push: true
           tags: |
             saugat0082/catalogservice:${{ github.event.inputs.tag }}
+
+      # Notify Google Chat (Success)
+      - name: Notify Google Chat (Success)
+        if: success()  # Run only if the build succeeds
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{
+                "text": "✅ *Build Successful*: Docker image has been built and pushed successfully!\nTag: `${{ github.event.inputs.tag }}`"
+              }' \
+          ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+
+      # Notify Google Chat (Failure)
+      - name: Notify Google Chat (Failure)
+        if: failure()  # Run only if the build fails
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{
+                "text": "❌ *Build Failed*: There was an error building or pushing the Docker image.\nPlease check the logs for details."
+              }' \
+          ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+
+
+      # - name: Health Check
+      #   run: |
+      #      curl -f http://your-server-ip/health || exit 1
 
      # # Deploy to Server
      #  - name: Deploy to Server
@@ -67,3 +98,5 @@ jobs:
 
      #        # Start a new container with the updated image
      #        docker run -d --name catalogservice -p 80:80 saugat0082/catalogservice:${{ github.event.inputs.tag }}
+
+
