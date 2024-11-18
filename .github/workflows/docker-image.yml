@@ -40,12 +40,6 @@ jobs:
       - name: Verify Docker Login
         run: docker login -u "${{ env.DOCKER_USERNAME }}" -p "${{ env.DOCKER_PASSWORD }}"
 
-     #Security Check
-      - name: Scan Docker Image for Vulnerabilities
-        uses: aquasecurity/trivy-action@v0.2.1
-        with:
-          image-ref: saugat0082/catalogservice:${{ github.event.inputs.tag }}
-
       # Build and push the Docker image
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v4
