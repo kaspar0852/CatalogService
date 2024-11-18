@@ -19,22 +19,20 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # Extract Docker credentials from catalogsecrets
+      # Extract Docker credentials directly from the secret
       - name: Extract Docker Credentials
-        id: docker-credentials
         run: |
-          echo "${{ secrets.catalogsecrets }}" > credentials.json
-          export DOCKER_USERNAME=$(cat credentials.json | jq -r '.DOCKER_USERNAME')
-          export DOCKER_PASSWORD=$(cat credentials.json | jq -r '.DOCKER_PASSWORD')
-          echo "::set-output name=username::$DOCKER_USERNAME"
-          echo "::set-output name=password::$DOCKER_PASSWORD"
+          export DOCKER_USERNAME=$(echo '${{ secrets.catalogsecrets }}' | jq -r '.DOCKER_USERNAME')
+          export DOCKER_PASSWORD=$(echo '${{ secrets.catalogsecrets }}' | jq -r '.DOCKER_PASSWORD')
+          echo "DOCKER_USERNAME=$DOCKER_USERNAME" >> $GITHUB_ENV
+          echo "DOCKER_PASSWORD=$DOCKER_PASSWORD" >> $GITHUB_ENV
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ steps.docker-credentials.outputs.username }}
-          password: ${{ steps.docker-credentials.outputs.password }}
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
 
       # Build and push the Docker image
       - name: Build and Push Docker Image
