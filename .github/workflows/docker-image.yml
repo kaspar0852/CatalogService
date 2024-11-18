@@ -6,7 +6,6 @@ on:
       - master  # Trigger workflow on pushes to 'master' branch
 
 jobs:
-  # Step 1: Build the Docker Image and Push to Docker Hub
   docker:
     runs-on: ubuntu-latest
 
@@ -33,6 +32,10 @@ jobs:
         with:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
+
+      # Verify Docker Login
+      - name: Verify Docker Login
+        run: docker login -u "${{ env.DOCKER_USERNAME }}" -p "${{ env.DOCKER_PASSWORD }}"
 
       # Build and push the Docker image
       - name: Build and Push Docker Image
