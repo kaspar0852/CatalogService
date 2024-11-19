@@ -54,6 +54,11 @@ jobs:
           tags: |
             saugat0082/catalogservice:${{ github.event.inputs.tag }}
 
+      - name: Tag Backup Image
+        run: |
+            docker tag saugat0082/catalogservice:${{ github.event.inputs.tag }} saugat0082/catalogservice:backup
+
+
       # # Notify Google Chat (Success)
       # - name: Notify Google Chat (Success)
       #   if: success()
